@@ -37,7 +37,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build 3.1.x
+    - name: Build .NET Core 3.1
       run: dotnet build --no-restore
 
     - name: Test
