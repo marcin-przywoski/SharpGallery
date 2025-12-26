@@ -6,6 +6,3 @@ namespace SharpGallery.ViewModels
         public string Greeting { get; } = "Welcome to Avalonia!";
     }
 }
-
-
-

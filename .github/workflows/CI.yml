@@ -27,17 +27,17 @@ jobs:
       uses: actions/checkout@v4.1.1
 
     - name: Setup .NET 3.1.x
-      uses: actions/setup-dotnet@v4.0.0
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: '3.1'
 
     - name: Run linter
-      run: dotnet format --verify-no-changes
+      run: dotnet format --verify-no-changes SharpGallery.slnx
 
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build 3.1.x
+    - name: Build .NET Core 3.1
       run: dotnet build --no-restore
 
     - name: Test
