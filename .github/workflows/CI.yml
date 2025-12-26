@@ -32,7 +32,7 @@ jobs:
         dotnet-version: '3.1'
 
     - name: Run linter
-      run: dotnet format --verify-no-changes
+      run: dotnet format --verify-no-changes .\SharpGallery.slnx
 
     - name: Restore dependencies
       run: dotnet restore
