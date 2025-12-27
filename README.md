@@ -18,3 +18,4 @@ Download the repository and compile it by yourself in VS Code or Visual Studio o
 ## Acknowledgments
 
 - [Avalonia UI](https://github.com/AvaloniaUI/Avalonia)
+- [Velopack](https://github.com/velopack/velopack)
