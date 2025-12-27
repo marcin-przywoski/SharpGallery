@@ -6,5 +6,3 @@ namespace SharpGallery.ViewModels
     {
     }
 }
-
-
