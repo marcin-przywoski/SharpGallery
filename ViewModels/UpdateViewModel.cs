@@ -43,9 +43,9 @@ namespace SharpGallery.ViewModels
         [ObservableProperty]
         private DateTime? _releaseDate;
 
-        public UpdateViewModel()
+        public UpdateViewModel(IUpdateService updateService)
         {
-            _updateService = new UpdateService();
+            _updateService = updateService;
         }
 
         [RelayCommand]
