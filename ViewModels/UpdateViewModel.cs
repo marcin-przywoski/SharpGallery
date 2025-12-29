@@ -46,7 +46,6 @@ namespace SharpGallery.ViewModels
         public UpdateViewModel()
         {
             _updateService = new UpdateService();
-            CurrentVersion = _updateService.CurrentVersion ?? "Development";
         }
 
         [RelayCommand]
@@ -67,11 +66,7 @@ namespace SharpGallery.ViewModels
                 if (hasUpdate)
                 {
                     IsUpdateAvailable = true;
-                    NewVersion = _updateService.NewVersion;
-                    ReleaseNotes = _updateService.ReleaseNotes;
-                    ReleaseName = _updateService.ReleaseName;
-                    ReleaseDate = _updateService.ReleaseDate;
-                    StatusMessage = $"Update available: v{NewVersion}";
+                    StatusMessage = "Update available!";
                 }
                 else
                 {
@@ -142,12 +137,6 @@ namespace SharpGallery.ViewModels
 
         public async Task CheckForUpdatesOnStartupAsync()
         {
-            if (!_updateService.IsInstalled)
-            {
-                StatusMessage = "Running in development mode";
-                return;
-            }
-
             await CheckForUpdatesAsync();
         }
     }
