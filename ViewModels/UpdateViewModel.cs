@@ -8,40 +8,40 @@ namespace SharpGallery.ViewModels
 {
     public partial class UpdateViewModel : ViewModelBase
     {
-        private readonly UpdateService _updateService;
+        private readonly IUpdateService _updateService;
 
         [ObservableProperty]
-        private bool _isCheckingForUpdates;
+        private bool _isCheckingForUpdates = false;
 
         [ObservableProperty]
-        private bool _isUpdateAvailable;
+        private bool _isUpdateAvailable = false;
 
         [ObservableProperty]
-        private bool _isDownloading;
+        private bool _isDownloading = false;
 
         [ObservableProperty]
-        private int _downloadProgress;
+        private int _downloadProgress = 0;
 
         [ObservableProperty]
-        private bool _isReadyToInstall;
+        private bool _isReadyToInstall = false;
 
         [ObservableProperty]
         private string _statusMessage = string.Empty;
 
         [ObservableProperty]
-        private string? _currentVersion;
+        private string? _currentVersion = string.Empty;
 
         [ObservableProperty]
-        private string? _newVersion;
+        private string? _newVersion = string.Empty;
 
         [ObservableProperty]
-        private string? _releaseNotes;
+        private string? _releaseNotes = string.Empty;
 
         [ObservableProperty]
-        private string? _releaseName;
+        private string? _releaseName = string.Empty;
 
         [ObservableProperty]
-        private DateTime? _releaseDate;
+        private DateTime? _releaseDate = DateTime.Now;
 
         public UpdateViewModel(IUpdateService updateService)
         {
