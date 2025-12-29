@@ -41,6 +41,6 @@
     </PackageReference>
 
     <!-- Auto Updates -->
-    <PackageReference Include="Velopack" Version="0.0.61" />
+    <PackageReference Include="Velopack" Version="0.0.212" />
   </ItemGroup>
 </Project>
