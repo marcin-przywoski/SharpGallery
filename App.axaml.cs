@@ -18,6 +18,9 @@ namespace SharpGallery
 
         public override void OnFrameworkInitializationCompleted()
         {
+            // Configure dependency injection
+            ServiceLocator.Configure();
+
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
@@ -25,7 +28,7 @@ namespace SharpGallery
                 DisableAvaloniaDataAnnotationValidation();
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = ServiceLocator.GetService<MainWindowViewModel>(),
                 };
             }
 

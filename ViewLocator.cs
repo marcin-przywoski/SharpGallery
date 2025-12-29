@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using SharpGallery.ViewModels;
@@ -15,16 +14,31 @@ namespace SharpGallery
     //     Url = "https://docs.avaloniaui.net/docs/concepts/view-locator")]
     public class ViewLocator : IDataTemplate
     {
-        public Control Build(object data)
+        public Control? Build(object? data)
         {
-            return data switch
+            if (data is null)
+                return null;
+
+            var viewModelType = data.GetType();
+            var viewTypeName = viewModelType.FullName!.Replace("ViewModel", "View");
+            var viewType = Type.GetType(viewTypeName);
+
+            if (viewType != null)
             {
-                MainWindowViewModel vm => new MainWindow { DataContext = vm },
-                _ => new TextBlock { Text = $"View not found for {data.GetType().Name}" }
-            };
+                var view = (Control)Activator.CreateInstance(viewType)!;
+                view.DataContext = data;
+                return view;
+            }
+
+            return new TextBlock { Text = $"View not found for {viewModelType.Name}" };
         }
 
-        public bool Match(object data) => data is ViewModelBase;
+        public bool Match(object? data) => data is ViewModelBase;
+
+        public static T GetViewModel<T>() where T : ViewModelBase
+        {
+            return ServiceLocator.GetService<T>();
+        }
     }
 }
 

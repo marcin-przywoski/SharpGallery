@@ -1,14 +1,16 @@
-﻿namespace SharpGallery.ViewModels
+﻿using SharpGallery.Services;
+
+namespace SharpGallery.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
         public string Greeting { get; } = "Welcome to Avalonia!";
 
-        public UpdateViewModel UpdateViewModel { get; } = new UpdateViewModel();
+        public UpdateViewModel UpdateViewModel { get; }
 
-        public async void InitializeAsync()
+        public MainWindowViewModel(UpdateViewModel updateViewModel)
         {
-            await UpdateViewModel.CheckForUpdatesOnStartupAsync();
+            UpdateViewModel = updateViewModel;
         }
     }
 }
