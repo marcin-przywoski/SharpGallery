@@ -13,19 +13,18 @@ namespace SharpGallery
     // [RequiresUnreferencedCode(
     //     "Default implementation of ViewLocator involves reflection which may be trimmed away.",
     //     Url = "https://docs.avaloniaui.net/docs/concepts/view-locator")]
-public class ViewLocator : IDataTemplate
-{
-    public Control Build(object data)
+    public class ViewLocator : IDataTemplate
     {
-        return data switch
+        public Control Build(object data)
         {
-            MainWindowViewModel vm => new MainWindow { DataContext = vm },
-            _ => new TextBlock { Text = $"View not found for {data.GetType().Name}" }
-        };
+            return data switch
+            {
+                MainWindowViewModel vm => new MainWindow { DataContext = vm },
+                _ => new TextBlock { Text = $"View not found for {data.GetType().Name}" }
+            };
+        }
+
+        public bool Match(object data) => data is ViewModelBase;
     }
-
-    public bool Match(object data) => data is ViewModelBase;
 }
-}
-
 
