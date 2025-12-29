@@ -41,7 +41,7 @@
     </PackageReference>
 
     <!-- Auto Updates -->
-    <PackageReference Include="Velopack" Version="0.0.212" />
+    <PackageReference Include="Velopack" Version="0.0.1298" />
   </ItemGroup>
 
   <Import Project="BuildInfo.targets" />
