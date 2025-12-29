@@ -8,7 +8,7 @@ using Velopack.Sources;
 
 namespace SharpGallery.Services
 {
-    public class UpdateService
+    public class UpdateService : IUpdateService
     {
         private readonly UpdateManager _updateManager;
         private UpdateInfo? _updateInfo;
