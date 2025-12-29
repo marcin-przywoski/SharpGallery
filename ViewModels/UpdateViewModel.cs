@@ -43,6 +43,14 @@ namespace SharpGallery.ViewModels
         [ObservableProperty]
         private DateTime? _releaseDate = DateTime.Now;
 
+        /// <summary>
+        /// Design-time constructor for XAML previewer.
+        /// </summary>
+        public UpdateViewModel()
+        {
+            _updateService = null!;
+        }
+
         public UpdateViewModel(IUpdateService updateService)
         {
             _updateService = updateService;

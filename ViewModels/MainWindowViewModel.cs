@@ -8,6 +8,13 @@ namespace SharpGallery.ViewModels
 
         public UpdateViewModel UpdateViewModel { get; }
 
+        /// <summary>
+        /// Design-time constructor for XAML previewer.
+        /// </summary>
+        public MainWindowViewModel() : this(new UpdateViewModel())
+        {
+        }
+
         public MainWindowViewModel(UpdateViewModel updateViewModel)
         {
             UpdateViewModel = updateViewModel;
