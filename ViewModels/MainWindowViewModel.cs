@@ -30,13 +30,13 @@ namespace SharpGallery.ViewModels
         /// <summary>
         /// Design-time constructor for XAML previewer.
         /// </summary>
-        public MainWindowViewModel() : this(new UpdateViewModel())
+        public MainWindowViewModel() : this(new UpdateViewModel(), new ImageScanningService())
         {
         }
 
-        public MainWindowViewModel(UpdateViewModel updateViewModel)
+        public MainWindowViewModel(UpdateViewModel updateViewModel, ImageScanningService scanningService)
         {
-            _scanningService = new ImageScanningService();
+            _scanningService = scanningService;
             UpdateViewModel = updateViewModel;
         }
 
