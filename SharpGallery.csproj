@@ -7,7 +7,7 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <RepositoryUrl>https://github.com/marcin-przywoski/SharpGallery</RepositoryUrl>
 		<RepositoryType>public</RepositoryType>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
     <LangVersion>latest</LangVersion>
