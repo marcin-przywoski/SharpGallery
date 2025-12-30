@@ -36,5 +36,30 @@ namespace SharpGallery.Services
             });
         }
 
+        public async Task<Bitmap?> LoadThumbnailAsync(string path, int width = 200)
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    using var stream = File.OpenRead(path);
+                    // Use SkiaSharp for efficient resizing
+                    using var original = SKBitmap.Decode(stream);
+                    if (original == null)
+                        return null;
+
+                    int height = (int)((float)original.Height / original.Width * width);
+                    using var resized = original.Resize(new SKImageInfo(width, height), SKFilterQuality.High);
+                    using var image = SKImage.FromBitmap(resized);
+                    using var data = image.Encode(SKEncodedImageFormat.Jpeg, 90);
+
+                    return new Bitmap(data.AsStream());
+                }
+                catch
+                {
+                    return null;
+                }
+            });
+        }
     }
 }
