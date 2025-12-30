@@ -1,4 +1,11 @@
-﻿using SharpGallery.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using SharpGallery.Models;
+using SharpGallery.Services;
 
 namespace SharpGallery.ViewModels
 {
@@ -47,3 +54,22 @@ namespace SharpGallery.ViewModels
                 _ = LoadThumbnailsAsync(items);
         }
 
+        private async Task LoadThumbnailsAsync(List<ImageItem> items)
+        {
+            foreach (var item in items)
+            {
+                if (item.Thumbnail == null)
+                {
+                    var thumb = await _scanningService.LoadThumbnailAsync(item.Path);
+                    if (thumb != null)
+                    {
+                        item.Thumbnail = thumb;
+                        // Force update if necessary, but replacing the item in ObservableCollection is cleaner
+                        // For now, we assume View binds to Property and Property Changed event needed on ImageItem
+                        // To make it simple, we will assume ImageItem needs to be observable.
+                    }
+                }
+            }
+        }
+    }
+}
