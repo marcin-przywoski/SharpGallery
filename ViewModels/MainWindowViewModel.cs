@@ -66,7 +66,7 @@ namespace SharpGallery.ViewModels
                         item.Thumbnail = thumb;
                         // Assign the loaded thumbnail to the item; any UI updates depend on how ImageItem
                         // exposes property change notifications and is bound within the view.
-                        
+
                     }
                 }
             }
