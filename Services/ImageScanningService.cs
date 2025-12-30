@@ -11,6 +11,7 @@ namespace SharpGallery.Services
 {
     public class ImageScanningService
     {
+        private readonly string[] _supportedExtensions = { ".jpg", ".jpeg", ".png", ".bmp", ".webp" };
 
     }
 }
