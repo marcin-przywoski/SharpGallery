@@ -4,7 +4,16 @@ namespace SharpGallery.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
-        public string Greeting { get; } = "Welcome to Avalonia!";
+        [ObservableProperty]
+        private ObservableCollection<ImageItem> _images = new();
+
+        [ObservableProperty]
+        private ObservableCollection<ImageItem> _filteredImages = new();
+        [ObservableProperty]
+        private ImageItem? _selectedImage;
+
+        [ObservableProperty]
+        private bool _isGalleryView = true;
 
         public UpdateViewModel UpdateViewModel { get; }
 
