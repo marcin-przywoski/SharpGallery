@@ -55,7 +55,7 @@
                 <Grid Grid.Column="1" RowDefinitions="Auto,*">
                     <!--  Gallery View  -->
                     <ScrollViewer Grid.Row="1" Padding="20">
-                        <ItemsControl ItemsSource="{Binding FilteredImages}">
+                        <ItemsControl ItemsSource="{Binding FilteredImages}" RenderOptions.BitmapInterpolationMode="HighQuality">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel />
