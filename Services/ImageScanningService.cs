@@ -55,8 +55,19 @@ namespace SharpGallery.Services
 
                     return new Bitmap(data.AsStream());
                 }
-                catch
+                catch (IOException ex)
                 {
+                    Console.Error.WriteLine($"Failed to load thumbnail for '{path}': {ex}");
+                    return null;
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    Console.Error.WriteLine($"Access denied while loading thumbnail for '{path}': {ex}");
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"Unexpected error while loading thumbnail for '{path}': {ex}");
                     return null;
                 }
             });
