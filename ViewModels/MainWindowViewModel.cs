@@ -64,9 +64,9 @@ namespace SharpGallery.ViewModels
                     if (thumb != null)
                     {
                         item.Thumbnail = thumb;
-                        // Force update if necessary, but replacing the item in ObservableCollection is cleaner
-                        // For now, we assume View binds to Property and Property Changed event needed on ImageItem
-                        // To make it simple, we will assume ImageItem needs to be observable.
+                        // Assign the loaded thumbnail to the item; any UI updates depend on how ImageItem
+                        // exposes property change notifications and is bound within the view.
+                        
                     }
                 }
             }
