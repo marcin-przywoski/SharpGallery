@@ -1,0 +1,21 @@
+<Project>
+  <Target Name="GenerateBuildInfo" BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <BuildInfoContent>
+namespace SharpGallery%3B
+
+internal static class BuildInfo
+{
+    public const string Version = "$(Version)"%3B
+}
+      </BuildInfoContent>
+    </PropertyGroup>
+    <WriteLinesToFile 
+      File="$(IntermediateOutputPath)BuildInfo.g.cs" 
+      Lines="$(BuildInfoContent)" 
+      Overwrite="true" />
+    <ItemGroup>
+      <Compile Include="$(IntermediateOutputPath)BuildInfo.g.cs" />
+    </ItemGroup>
+  </Target>
+</Project>

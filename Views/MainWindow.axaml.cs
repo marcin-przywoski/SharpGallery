@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using SharpGallery.ViewModels;
 
 namespace SharpGallery.Views
@@ -8,16 +10,24 @@ namespace SharpGallery.Views
         public MainWindow()
         {
             InitializeComponent();
-            Loaded += OnLoaded;
         }
 
-        private void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private async void OpenFolder_Click(object? sender, RoutedEventArgs e)
         {
-            if (DataContext is MainWindowViewModel viewModel)
+            var result = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
             {
-                viewModel.InitializeAsync();
+                Title = "Select Image Folder",
+                AllowMultiple = false
+            });
+
+            if (result.Count > 0)
+            {
+                var path = result[0].Path.LocalPath;
+                if (DataContext is MainWindowViewModel vm)
+                {
+                    await vm.LoadFolderCommand.ExecuteAsync(path);
+                }
             }
         }
     }
 }
-

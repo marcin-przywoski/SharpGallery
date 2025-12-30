@@ -7,7 +7,7 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <RepositoryUrl>https://github.com/marcin-przywoski/SharpGallery</RepositoryUrl>
 		<RepositoryType>public</RepositoryType>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
     <LangVersion>latest</LangVersion>
@@ -29,8 +29,21 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
+
+    <!-- Roslynator analyzers -->
+    <PackageReference Include="Roslynator.Analyzers" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Formatting.Analyzers" Version="1.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
 
     <!-- Auto Updates -->
-    <PackageReference Include="Velopack" Version="0.0.61" />
+    <PackageReference Include="Velopack" Version="0.0.212" />
   </ItemGroup>
+
+  <Import Project="BuildInfo.targets" />
 </Project>
