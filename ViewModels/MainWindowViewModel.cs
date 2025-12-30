@@ -4,6 +4,8 @@ namespace SharpGallery.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
+        private readonly ImageScanningService _scanningService;
+
         [ObservableProperty]
         private ObservableCollection<ImageItem> _images = new();
 
