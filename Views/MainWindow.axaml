@@ -1,32 +1,101 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:SharpGallery.ViewModels"
-        xmlns:views="using:SharpGallery.Views"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="SharpGallery.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="SharpGallery">
+﻿<Window
+    x:Class="SharpGallery.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="using:SharpGallery.Views"
+    xmlns:vm="using:SharpGallery.ViewModels"
+    Title="SharpGallery"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    x:DataType="vm:MainWindowViewModel"
+    Background="Transparent"
+    ExtendClientAreaToDecorationsHint="True"
+    Icon="/Assets/avalonia-logo.ico"
+    TransparencyLevelHint="AcrylicBlur"
+    mc:Ignorable="d">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="*,Auto">
-        <TextBlock Text="{Binding Greeting}" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center"
-                   Grid.Row="0"/>
+    <Panel>
+        <Border Background="#A0000000" IsHitTestVisible="False" />
 
-        <views:UpdateView DataContext="{Binding UpdateViewModel}"
-                          Grid.Row="1"
-                          MaxWidth="450"
-                          HorizontalAlignment="Right"
-                          VerticalAlignment="Bottom"/>
-    </Grid>
+        <Grid RowDefinitions="30,*">
+            <!--  Title Bar Drag Area  -->
+            <Panel
+                Grid.Row="0"
+                Background="Transparent"
+                IsHitTestVisible="False" />
 
+            <Grid Grid.Row="1" ColumnDefinitions="250,*">
+                <!--  Sidebar  -->
+                <Border
+                    Grid.Column="0"
+                    Padding="10"
+                    Background="#202020">
+                    <StackPanel Spacing="10">
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Text="Sharp Gallery" />
+
+                        <Button
+                            HorizontalAlignment="Stretch"
+                            Click="OpenFolder_Click"
+                            Content="Open Folder" />
+                    </StackPanel>
+                </Border>
+
+                <!--  Main Content  -->
+                <Grid Grid.Column="1" RowDefinitions="Auto,*">
+                    <!--  Gallery View  -->
+                    <ScrollViewer Grid.Row="1" Padding="20">
+                        <ItemsControl ItemsSource="{Binding FilteredImages}" RenderOptions.BitmapInterpolationMode="HighQuality">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Width="150"
+                                        Height="150"
+                                        Margin="5"
+                                        Background="#303030"
+                                        ClipToBounds="True"
+                                        CornerRadius="8">
+                                        <Grid>
+                                            <Image Source="{Binding Thumbnail}" Stretch="UniformToFill" />
+                                            <TextBlock
+                                                Padding="5"
+                                                VerticalAlignment="Bottom"
+                                                Background="#80000000"
+                                                FontSize="10"
+                                                Foreground="White"
+                                                Text="{Binding FileName}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+            <views:UpdateView
+                Grid.Row="1"
+                MaxWidth="450"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                DataContext="{Binding UpdateViewModel}" />
+        </Grid>
+    </Panel>
 </Window>
+
+
+
