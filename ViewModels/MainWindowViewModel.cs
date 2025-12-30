@@ -46,12 +46,12 @@ namespace SharpGallery.ViewModels
             if (string.IsNullOrEmpty(path))
                 return;
 
-                var items = await _scanningService.ScanDirectoryAsync(path);
-                Images = new ObservableCollection<ImageItem>(items);
-                FilteredImages = new ObservableCollection<ImageItem>(items);
+            var items = await _scanningService.ScanDirectoryAsync(path);
+            Images = new ObservableCollection<ImageItem>(items);
+            FilteredImages = new ObservableCollection<ImageItem>(items);
 
-                // Trigger background thumbnail loading
-                _ = LoadThumbnailsAsync(items);
+            // Trigger background thumbnail loading
+            _ = LoadThumbnailsAsync(items);
         }
 
         private async Task LoadThumbnailsAsync(List<ImageItem> items)
