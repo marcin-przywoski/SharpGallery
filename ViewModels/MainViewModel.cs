@@ -9,7 +9,7 @@ using SharpGallery.Services;
 
 namespace SharpGallery.ViewModels
 {
-    public partial class MainWindowViewModel : ViewModelBase
+    public partial class MainViewModel : ViewModelBase
     {
         private readonly ImageScanningService _scanningService;
 
@@ -30,11 +30,11 @@ namespace SharpGallery.ViewModels
         /// <summary>
         /// Design-time constructor for XAML previewer.
         /// </summary>
-        public MainWindowViewModel() : this(new UpdateViewModel(), new ImageScanningService())
+        public MainViewModel() : this(new UpdateViewModel(), new ImageScanningService())
         {
         }
 
-        public MainWindowViewModel(UpdateViewModel updateViewModel, ImageScanningService scanningService)
+        public MainViewModel(UpdateViewModel updateViewModel, ImageScanningService scanningService)
         {
             _scanningService = scanningService;
             UpdateViewModel = updateViewModel;

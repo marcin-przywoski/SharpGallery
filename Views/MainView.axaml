@@ -1,5 +1,5 @@
 ﻿<Window
-    x:Class="SharpGallery.Views.MainWindow"
+    x:Class="SharpGallery.Views.MainView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,7 @@
     Title="SharpGallery"
     d:DesignHeight="600"
     d:DesignWidth="1000"
-    x:DataType="vm:MainWindowViewModel"
+    x:DataType="vm:MainViewModel"
     Background="Transparent"
     ExtendClientAreaToDecorationsHint="True"
     Icon="/Assets/avalonia-logo.ico"
@@ -17,13 +17,13 @@
     mc:Ignorable="d">
 
     <Design.DataContext>
-        <vm:MainWindowViewModel />
+        <vm:MainViewModel />
     </Design.DataContext>
 
     <Panel>
         <Border Background="#A0000000" IsHitTestVisible="False" />
 
-        <Grid RowDefinitions="30,*">
+        <Grid RowDefinitions="30,*,30">
             <!--  Title Bar Drag Area  -->
             <Panel
                 Grid.Row="0"
