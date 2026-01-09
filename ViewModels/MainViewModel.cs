@@ -25,6 +25,9 @@ namespace SharpGallery.ViewModels
         [ObservableProperty]
         private bool _isGalleryView = true;
 
+        [ObservableProperty]
+        private string _statusText = "Ready";
+
         public UpdateViewModel UpdateViewModel { get; }
 
         /// <summary>
@@ -46,9 +49,13 @@ namespace SharpGallery.ViewModels
             if (string.IsNullOrEmpty(path))
                 return;
 
+            _statusText = "Scanning folder...";
+
             var items = await _scanningService.ScanDirectoryAsync(path);
             Images = new ObservableCollection<ImageItem>(items);
             FilteredImages = new ObservableCollection<ImageItem>(items);
+
+            _statusText = $"Loaded {items.Count} images.";
 
             // Trigger background thumbnail loading
             _ = LoadThumbnailsAsync(items);
