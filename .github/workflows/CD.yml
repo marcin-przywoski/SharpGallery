@@ -33,6 +33,17 @@ jobs:
         run: |
           dotnet tool install -g vpk
 
+      - name: Download previous release for delta generation
+        run: |
+          vpk download github --repoUrl https://github.com/${{ github.repository }} --token ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+      - name: Create Velopack package with deltas
+        run: |
+          vpk pack -u SharpGallery -v ${{ github.ref_name }} -p publish
+
       - name: Create Github release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -42,10 +53,6 @@ jobs:
           --title "${{ github.ref_name }}"
           --verify-tag
           --generate-notes
-
-      - name: Create Velopack package
-        run: |
-          vpk pack -u SharpGallery -v ${{ github.ref_name}} -p publish
 
       - name: Upload Velopack package to release
         run: >
