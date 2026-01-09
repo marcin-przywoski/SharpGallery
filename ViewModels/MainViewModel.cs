@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -83,6 +84,24 @@ namespace SharpGallery.ViewModels
                     }
                 }
             }
+        }
+
+        partial void OnSearchTextChanged(string value)
+        {
+            PerformSearch(value);
+        }
+
+        private void PerformSearch(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                FilteredImages = new ObservableCollection<ImageItem>(Images);
+                return;
+            }
+
+            FilteredImages = new ObservableCollection<ImageItem>(
+                Images.Where(i => i.FileName.Contains(query, StringComparison.OrdinalIgnoreCase))
+            );
         }
     }
 }
