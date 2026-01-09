@@ -41,6 +41,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Tesseract" Version="5.2.0" />
 
     <!-- Auto Updates -->
     <PackageReference Include="Velopack" Version="0.0.212" />
