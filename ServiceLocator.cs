@@ -30,7 +30,7 @@ namespace SharpGallery
 
         private static void ConfigureViewModels(IServiceCollection services)
         {
-            services.AddSingleton<MainWindowViewModel>();
+            services.AddSingleton<MainViewModel>();
             services.AddSingleton<UpdateViewModel>();
         }
 

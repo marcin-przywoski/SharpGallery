@@ -5,9 +5,9 @@ using SharpGallery.ViewModels;
 
 namespace SharpGallery.Views
 {
-    public partial class MainWindow : Window
+    public partial class MainView : Window
     {
-        public MainWindow()
+        public MainView()
         {
             InitializeComponent();
         }
@@ -23,7 +23,7 @@ namespace SharpGallery.Views
             if (result.Count > 0)
             {
                 var path = result[0].Path.LocalPath;
-                if (DataContext is MainWindowViewModel vm)
+                if (DataContext is MainViewModel vm)
                 {
                     await vm.LoadFolderCommand.ExecuteAsync(path);
                 }

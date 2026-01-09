@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -9,7 +10,7 @@ using SharpGallery.Services;
 
 namespace SharpGallery.ViewModels
 {
-    public partial class MainWindowViewModel : ViewModelBase
+    public partial class MainViewModel : ViewModelBase
     {
         private readonly ImageScanningService _scanningService;
 
@@ -25,16 +26,25 @@ namespace SharpGallery.ViewModels
         [ObservableProperty]
         private bool _isGalleryView = true;
 
+        [ObservableProperty]
+        private string _statusText = "Ready";
+
+        [ObservableProperty]
+        private string _searchText = "Enter search query";
+
+        [ObservableProperty]
+        private string _searchBarStatusText = "Ready";
+
         public UpdateViewModel UpdateViewModel { get; }
 
         /// <summary>
         /// Design-time constructor for XAML previewer.
         /// </summary>
-        public MainWindowViewModel() : this(new UpdateViewModel(), new ImageScanningService())
+        public MainViewModel() : this(new UpdateViewModel(), new ImageScanningService())
         {
         }
 
-        public MainWindowViewModel(UpdateViewModel updateViewModel, ImageScanningService scanningService)
+        public MainViewModel(UpdateViewModel updateViewModel, ImageScanningService scanningService)
         {
             _scanningService = scanningService;
             UpdateViewModel = updateViewModel;
@@ -46,9 +56,13 @@ namespace SharpGallery.ViewModels
             if (string.IsNullOrEmpty(path))
                 return;
 
+            _statusText = "Scanning folder...";
+
             var items = await _scanningService.ScanDirectoryAsync(path);
             Images = new ObservableCollection<ImageItem>(items);
             FilteredImages = new ObservableCollection<ImageItem>(items);
+
+            _statusText = $"Loaded {items.Count} images.";
 
             // Trigger background thumbnail loading
             _ = LoadThumbnailsAsync(items);
@@ -70,6 +84,24 @@ namespace SharpGallery.ViewModels
                     }
                 }
             }
+        }
+
+        partial void OnSearchTextChanged(string value)
+        {
+            PerformSearch(value);
+        }
+
+        private void PerformSearch(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                FilteredImages = new ObservableCollection<ImageItem>(Images);
+                return;
+            }
+
+            FilteredImages = new ObservableCollection<ImageItem>(
+                Images.Where(i => i.FileName.Contains(query, StringComparison.OrdinalIgnoreCase))
+            );
         }
     }
 }

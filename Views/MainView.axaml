@@ -1,5 +1,5 @@
 ﻿<Window
-    x:Class="SharpGallery.Views.MainWindow"
+    x:Class="SharpGallery.Views.MainView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,7 @@
     Title="SharpGallery"
     d:DesignHeight="600"
     d:DesignWidth="1000"
-    x:DataType="vm:MainWindowViewModel"
+    x:DataType="vm:MainViewModel"
     Background="Transparent"
     ExtendClientAreaToDecorationsHint="True"
     Icon="/Assets/avalonia-logo.ico"
@@ -17,13 +17,13 @@
     mc:Ignorable="d">
 
     <Design.DataContext>
-        <vm:MainWindowViewModel />
+        <vm:MainViewModel />
     </Design.DataContext>
 
     <Panel>
         <Border Background="#A0000000" IsHitTestVisible="False" />
 
-        <Grid RowDefinitions="30,*">
+        <Grid RowDefinitions="30,*,30">
             <!--  Title Bar Drag Area  -->
             <Panel
                 Grid.Row="0"
@@ -53,6 +53,11 @@
 
                 <!--  Main Content  -->
                 <Grid Grid.Column="1" RowDefinitions="Auto,*">
+                    <!-- Top Bar -->
+                    <Grid Grid.Row="0" Margin="20" ColumnDefinitions="*,Auto">
+                        <TextBox Grid.Column="0" Text="{Binding SearchText}" Watermark="Search images..." CornerRadius="20" Padding="10,5" Margin="0,0,20,0"/>
+                        <TextBlock Grid.Column="1" Text="{Binding SearchBarStatusText}" VerticalAlignment="Center" Foreground="#AAAAAA"/>
+                    </Grid>
                     <!--  Gallery View  -->
                     <ScrollViewer Grid.Row="1" Padding="20">
                         <ItemsControl ItemsSource="{Binding FilteredImages}" RenderOptions.BitmapInterpolationMode="HighQuality">
@@ -87,6 +92,10 @@
                     </ScrollViewer>
                 </Grid>
             </Grid>
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Padding="8" Background="#1e1e1e">
+            <TextBlock Text="{Binding StatusText}" FontSize="12"/>
+        </Border>
             <views:UpdateView
                 Grid.Row="1"
                 MaxWidth="450"
