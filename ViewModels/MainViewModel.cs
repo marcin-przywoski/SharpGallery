@@ -103,7 +103,7 @@ namespace SharpGallery.ViewModels
             }
 
             FilteredImages = new ObservableCollection<ImageItem>(
-                Images.Where(i => i.FileName.Contains(query, StringComparison.OrdinalIgnoreCase))
+                Images.Where(i => i.FileName.Contains(query, StringComparison.OrdinalIgnoreCase) || i.OcrText.Contains(query, StringComparison.OrdinalIgnoreCase))
             );
         }
 
