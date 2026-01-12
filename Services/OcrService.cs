@@ -8,7 +8,7 @@ using Tesseract;
 
 namespace SharpGallery.Services
 {
-    public class OcrService
+    public class OcrService : IDisposable
     {
         private TesseractEngine? _engine;
         private bool _isLoaded;
@@ -54,6 +54,10 @@ namespace SharpGallery.Services
             });
         }
 
+        public void Dispose()
+        {
+            _engine?.Dispose();
+        }
     }
-    
+
 }
