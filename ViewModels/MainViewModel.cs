@@ -106,5 +106,20 @@ namespace SharpGallery.ViewModels
                 Images.Where(i => i.FileName.Contains(query, StringComparison.OrdinalIgnoreCase))
             );
         }
+
+        [RelayCommand]
+        public async Task ScanOcrAsync()
+        {
+            StatusText = "Running OCR on images...";
+            try
+            {
+                await _ocrService.ProcessImagesAsync(Images.ToList());
+                StatusText = "OCR scanning complete.";
+            }
+            catch (Exception ex)
+            {
+                StatusText = $"OCR failed: {ex.Message}";
+            }
+        }
     }
 }
