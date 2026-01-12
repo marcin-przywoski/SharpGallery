@@ -110,9 +110,13 @@ namespace SharpGallery.ViewModels
         [RelayCommand]
         public async Task ScanOcrAsync()
         {
-            StatusText = "Running OCR on images...";
+            StatusText = "Loading OCR model...";
             try
             {
+                await _ocrService.InitializeAsync(AppContext.BaseDirectory + @"\tessdata");
+
+                StatusText = "Running OCR on images...";
+
                 await _ocrService.ProcessImagesAsync(Images.ToList());
                 StatusText = "OCR scanning complete.";
             }
