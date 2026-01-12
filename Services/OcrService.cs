@@ -54,6 +54,42 @@ namespace SharpGallery.Services
             });
         }
 
+        public async Task ProcessImagesAsync(List<ImageItem> images)
+        {
+            if (!_isLoaded)
+            {
+                await InitializeAsync(ApplicationFolder);
+                if (!_isLoaded)
+                    return;
+            }
+
+            await Task.Run(() =>
+            {
+                foreach (var img in images)
+                {
+                    // Skip if already has text
+                    if (!string.IsNullOrEmpty(img.OcrText))
+                        continue;
+
+                    try
+                    {
+                        using var pix = Pix.LoadFromFile(img.Path);
+                        using var page = _engine!.Process(pix);
+                        string text = page.GetText();
+
+                        if (!string.IsNullOrWhiteSpace(text))
+                        {
+                            img.OcrText = text.Trim();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"OCR failed for {img.FileName}: {ex.Message}");
+                    }
+                }
+            });
+        }
+
         public void Dispose()
         {
             _engine?.Dispose();
