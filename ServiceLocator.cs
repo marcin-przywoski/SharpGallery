@@ -26,6 +26,7 @@ namespace SharpGallery
         {
             services.AddSingleton<IUpdateService, UpdateService>();
             services.AddSingleton<ImageScanningService>();
+            services.AddSingleton<OcrService>();
         }
 
         private static void ConfigureViewModels(IServiceCollection services)
