@@ -48,6 +48,10 @@
                             HorizontalAlignment="Stretch"
                             Click="OpenFolder_Click"
                             Content="Open Folder" />
+                        <Button
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding ScanOcrCommand}"
+                            Content="Scan Text (OCR)" />
                     </StackPanel>
                 </Border>
 
