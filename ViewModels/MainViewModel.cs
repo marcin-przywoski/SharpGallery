@@ -14,6 +14,8 @@ namespace SharpGallery.ViewModels
     {
         private readonly ImageScanningService _scanningService;
 
+        private readonly OcrService _ocrService;
+
         [ObservableProperty]
         private ObservableCollection<ImageItem> _images = new();
 
@@ -40,13 +42,14 @@ namespace SharpGallery.ViewModels
         /// <summary>
         /// Design-time constructor for XAML previewer.
         /// </summary>
-        public MainViewModel() : this(new UpdateViewModel(), new ImageScanningService())
+        public MainViewModel() : this(new UpdateViewModel(), new ImageScanningService(), new OcrService())
         {
         }
 
-        public MainViewModel(UpdateViewModel updateViewModel, ImageScanningService scanningService)
+        public MainViewModel(UpdateViewModel updateViewModel, ImageScanningService scanningService, OcrService ocrService)
         {
             _scanningService = scanningService;
+            _ocrService = ocrService;
             UpdateViewModel = updateViewModel;
         }
 
