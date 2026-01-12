@@ -15,21 +15,17 @@
     Icon="/Assets/avalonia-logo.ico"
     TransparencyLevelHint="AcrylicBlur"
     mc:Ignorable="d">
-
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
-
     <Panel>
         <Border Background="#A0000000" IsHitTestVisible="False" />
-
         <Grid RowDefinitions="30,*,30">
             <!--  Title Bar Drag Area  -->
             <Panel
                 Grid.Row="0"
                 Background="Transparent"
                 IsHitTestVisible="False" />
-
             <Grid Grid.Row="1" ColumnDefinitions="250,*">
                 <!--  Sidebar  -->
                 <Border
@@ -43,7 +39,6 @@
                             FontWeight="Bold"
                             Foreground="White"
                             Text="Sharp Gallery" />
-
                         <Button
                             HorizontalAlignment="Stretch"
                             Click="OpenFolder_Click"
@@ -54,7 +49,6 @@
                             Content="Scan Text (OCR)" />
                     </StackPanel>
                 </Border>
-
                 <!--  Main Content  -->
                 <Grid Grid.Column="1" RowDefinitions="Auto,*">
                     <!--  Top Bar  -->
@@ -125,6 +119,3 @@
         </Grid>
     </Panel>
 </Window>
-
-
-
