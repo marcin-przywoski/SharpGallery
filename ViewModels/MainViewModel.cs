@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -13,6 +14,8 @@ namespace SharpGallery.ViewModels
     public partial class MainViewModel : ViewModelBase
     {
         private readonly ImageScanningService _scanningService;
+
+        private readonly OcrService _ocrService;
 
         [ObservableProperty]
         private ObservableCollection<ImageItem> _images = new();
@@ -40,13 +43,14 @@ namespace SharpGallery.ViewModels
         /// <summary>
         /// Design-time constructor for XAML previewer.
         /// </summary>
-        public MainViewModel() : this(new UpdateViewModel(), new ImageScanningService())
+        public MainViewModel() : this(new UpdateViewModel(), new ImageScanningService(), new OcrService())
         {
         }
 
-        public MainViewModel(UpdateViewModel updateViewModel, ImageScanningService scanningService)
+        public MainViewModel(UpdateViewModel updateViewModel, ImageScanningService scanningService, OcrService ocrService)
         {
             _scanningService = scanningService;
+            _ocrService = ocrService;
             UpdateViewModel = updateViewModel;
         }
 
@@ -100,8 +104,27 @@ namespace SharpGallery.ViewModels
             }
 
             FilteredImages = new ObservableCollection<ImageItem>(
-                Images.Where(i => i.FileName.Contains(query, StringComparison.OrdinalIgnoreCase))
+                Images.Where(i => i.FileName.Contains(query, StringComparison.OrdinalIgnoreCase) || i.OcrText.Contains(query, StringComparison.OrdinalIgnoreCase))
             );
+        }
+
+        [RelayCommand]
+        public async Task ScanOcrAsync()
+        {
+            StatusText = "Loading OCR model...";
+            try
+            {
+                await _ocrService.InitializeAsync(Path.Combine(AppContext.BaseDirectory, "tessdata"));
+
+                StatusText = "Running OCR on images...";
+
+                await _ocrService.ProcessImagesAsync(Images.ToList());
+                StatusText = "OCR scanning complete.";
+            }
+            catch (Exception ex)
+            {
+                StatusText = $"OCR failed: {ex.Message}";
+            }
         }
     }
 }

@@ -15,21 +15,17 @@
     Icon="/Assets/avalonia-logo.ico"
     TransparencyLevelHint="AcrylicBlur"
     mc:Ignorable="d">
-
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
-
     <Panel>
         <Border Background="#A0000000" IsHitTestVisible="False" />
-
         <Grid RowDefinitions="30,*,30">
             <!--  Title Bar Drag Area  -->
             <Panel
                 Grid.Row="0"
                 Background="Transparent"
                 IsHitTestVisible="False" />
-
             <Grid Grid.Row="1" ColumnDefinitions="250,*">
                 <!--  Sidebar  -->
                 <Border
@@ -43,20 +39,35 @@
                             FontWeight="Bold"
                             Foreground="White"
                             Text="Sharp Gallery" />
-
                         <Button
                             HorizontalAlignment="Stretch"
                             Click="OpenFolder_Click"
                             Content="Open Folder" />
+                        <Button
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding ScanOcrCommand}"
+                            Content="Scan Text (OCR)" />
                     </StackPanel>
                 </Border>
-
                 <!--  Main Content  -->
                 <Grid Grid.Column="1" RowDefinitions="Auto,*">
-                    <!-- Top Bar -->
-                    <Grid Grid.Row="0" Margin="20" ColumnDefinitions="*,Auto">
-                        <TextBox Grid.Column="0" Text="{Binding SearchText}" Watermark="Search images..." CornerRadius="20" Padding="10,5" Margin="0,0,20,0"/>
-                        <TextBlock Grid.Column="1" Text="{Binding SearchBarStatusText}" VerticalAlignment="Center" Foreground="#AAAAAA"/>
+                    <!--  Top Bar  -->
+                    <Grid
+                        Grid.Row="0"
+                        Margin="20"
+                        ColumnDefinitions="*,Auto">
+                        <TextBox
+                            Grid.Column="0"
+                            Margin="0,0,20,0"
+                            Padding="10,5"
+                            CornerRadius="20"
+                            Text="{Binding SearchText}"
+                            Watermark="Search images..." />
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Foreground="#AAAAAA"
+                            Text="{Binding SearchBarStatusText}" />
                     </Grid>
                     <!--  Gallery View  -->
                     <ScrollViewer Grid.Row="1" Padding="20">
@@ -92,10 +103,13 @@
                     </ScrollViewer>
                 </Grid>
             </Grid>
-        <!-- Status Bar -->
-        <Border Grid.Row="2" Padding="8" Background="#1e1e1e">
-            <TextBlock Text="{Binding StatusText}" FontSize="12"/>
-        </Border>
+            <!--  Status Bar  -->
+            <Border
+                Grid.Row="2"
+                Padding="8"
+                Background="#1e1e1e">
+                <TextBlock FontSize="12" Text="{Binding StatusText}" />
+            </Border>
             <views:UpdateView
                 Grid.Row="1"
                 MaxWidth="450"
@@ -105,6 +119,3 @@
         </Grid>
     </Panel>
 </Window>
-
-
-

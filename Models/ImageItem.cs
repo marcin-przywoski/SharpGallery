@@ -15,5 +15,8 @@ namespace SharpGallery.Models
 
         [ObservableProperty]
         private Bitmap? _thumbnail;
+
+        [ObservableProperty]
+        private string _ocrText = string.Empty;
     }
 }
