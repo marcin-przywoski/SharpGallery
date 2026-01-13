@@ -14,7 +14,7 @@ namespace SharpGallery.Services
         private bool _isLoaded;
         private const string TesseractDataUrl = "https://github.com/tesseract-ocr/tessdata_best/raw/main/eng.traineddata";
 
-        private readonly string ApplicationFolder = AppContext.BaseDirectory + @"\tessdata";
+        private readonly string ApplicationFolder = Path.Combine(AppContext.BaseDirectory, "tessdata");
 
         public async Task InitializeAsync(string dataPath)
         {

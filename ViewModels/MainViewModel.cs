@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -113,7 +114,7 @@ namespace SharpGallery.ViewModels
             StatusText = "Loading OCR model...";
             try
             {
-                await _ocrService.InitializeAsync(AppContext.BaseDirectory + @"\tessdata");
+                await _ocrService.InitializeAsync(Path.Combine(AppContext.BaseDirectory, "tessdata"));
 
                 StatusText = "Running OCR on images...";
 
