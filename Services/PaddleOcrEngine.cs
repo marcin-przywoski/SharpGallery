@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using SharpGallery.Models;
 using PaddleOCRSharp;
@@ -14,32 +13,34 @@ namespace SharpGallery.Services
 
         public bool IsLoaded => _isLoaded;
 
-        public async Task InitializeAsync(string dataPath)
+        public Task InitializeAsync(string dataPath)
         {
+            // Note: dataPath parameter is not used by PaddleOCR as it uses built-in models
             if (_isLoaded)
-                return;
+                return Task.CompletedTask;
 
-            await Task.Run(() =>
+            try
             {
-                try
-                {
-                    // Initialize PaddleOCR with default models
-                    // PaddleOCRSharp will handle model downloading automatically
-                    OCRParameter oCRParameter = new OCRParameter();
-                    oCRParameter.enable_mkldnn = true; // Enable MKLDNN for better performance
-                    oCRParameter.cpu_math_library_num_threads = 6;
-                    
-                    OCRModelConfig config = new OCRModelConfig();
+                // Initialize PaddleOCR with default models
+                // PaddleOCRSharp will handle model downloading automatically
+                OCRParameter oCRParameter = new OCRParameter();
+                oCRParameter.enable_mkldnn = true; // Enable MKLDNN for better performance
+                
+                // Use system's processor count for optimal performance
+                oCRParameter.cpu_math_library_num_threads = Environment.ProcessorCount;
+                
+                OCRModelConfig config = new OCRModelConfig();
 
-                    _engine = new PaddleOCREngine(config, oCRParameter);
-                    _isLoaded = true;
-                    Console.WriteLine("PaddleOCR initialized successfully.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to init PaddleOCR: {ex.Message}");
-                }
-            });
+                _engine = new PaddleOCREngine(config, oCRParameter);
+                _isLoaded = true;
+                Console.WriteLine("PaddleOCR initialized successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to init PaddleOCR: {ex.Message}");
+            }
+
+            return Task.CompletedTask;
         }
 
         public async Task ProcessImagesAsync(List<ImageItem> images)

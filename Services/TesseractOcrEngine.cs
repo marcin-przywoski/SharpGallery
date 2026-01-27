@@ -21,37 +21,38 @@ namespace SharpGallery.Services
             if (_isLoaded)
                 return;
 
-            await Task.Run(async () =>
+            try
             {
-                try
+                if (!Directory.Exists(dataPath))
                 {
-                    if (!Directory.Exists(dataPath))
-                    {
-                        Directory.CreateDirectory(dataPath);
-                    }
+                    Directory.CreateDirectory(dataPath);
+                }
 
-                    string tesseractFile = Path.Combine(dataPath, "eng.traineddata");
+                string tesseractFile = Path.Combine(dataPath, "eng.traineddata");
 
-                    if (!File.Exists(tesseractFile))
-                    {
-                        using var client = new HttpClient();
-                        Console.WriteLine("Downloading Tesseract data...");
-                        using var response = await client.GetAsync(TesseractDataUrl);
-                        response.EnsureSuccessStatusCode();
-                        using var stream = await response.Content.ReadAsStreamAsync();
-                        using var fileStream = File.Create(tesseractFile);
-                        await stream.CopyToAsync(fileStream);
-                        Console.WriteLine("Downloaded Tesseract data.");
-                    }
+                if (!File.Exists(tesseractFile))
+                {
+                    using var client = new HttpClient();
+                    Console.WriteLine("Downloading Tesseract data...");
+                    using var response = await client.GetAsync(TesseractDataUrl);
+                    response.EnsureSuccessStatusCode();
+                    using var stream = await response.Content.ReadAsStreamAsync();
+                    using var fileStream = File.Create(tesseractFile);
+                    await stream.CopyToAsync(fileStream);
+                    Console.WriteLine("Downloaded Tesseract data.");
+                }
 
+                // Initialize engine on background thread to avoid blocking
+                await Task.Run(() =>
+                {
                     _engine = new TesseractEngine(dataPath, "eng", EngineMode.LstmOnly);
-                    _isLoaded = true;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to init Tesseract OCR: {ex.Message}");
-                }
-            });
+                });
+                _isLoaded = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to init Tesseract OCR: {ex.Message}");
+            }
         }
 
         public async Task ProcessImagesAsync(List<ImageItem> images)

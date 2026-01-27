@@ -14,7 +14,6 @@ namespace SharpGallery.Services
         private OcrEngineType _currentEngineType = OcrEngineType.Tesseract;
 
         private readonly string TesseractDataFolder = Path.Combine(AppContext.BaseDirectory, "tessdata");
-        private readonly string PaddleDataFolder = Path.Combine(AppContext.BaseDirectory, "paddle_models");
 
         public OcrEngineType CurrentEngineType
         {
@@ -54,7 +53,8 @@ namespace SharpGallery.Services
                     }
                     if (!_paddleEngine.IsLoaded)
                     {
-                        await _paddleEngine.InitializeAsync(PaddleDataFolder);
+                        // PaddleOCR doesn't use the data path, passing empty string
+                        await _paddleEngine.InitializeAsync(string.Empty);
                     }
                     _currentEngine = _paddleEngine;
                     break;
