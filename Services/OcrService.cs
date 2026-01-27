@@ -1,99 +1,82 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using SharpGallery.Models;
-using Tesseract;
 
 namespace SharpGallery.Services
 {
     public class OcrService : IDisposable
     {
-        private TesseractEngine? _engine;
-        private bool _isLoaded;
-        private const string TesseractDataUrl = "https://github.com/tesseract-ocr/tessdata_best/raw/main/eng.traineddata";
+        private IOcrEngine? _currentEngine;
+        private TesseractOcrEngine? _tesseractEngine;
+        private PaddleOcrEngine? _paddleEngine;
+        private OcrEngineType _currentEngineType = OcrEngineType.Tesseract;
 
-        private readonly string ApplicationFolder = Path.Combine(AppContext.BaseDirectory, "tessdata");
+        private readonly string TesseractDataFolder = Path.Combine(AppContext.BaseDirectory, "tessdata");
+        private readonly string PaddleDataFolder = Path.Combine(AppContext.BaseDirectory, "paddle_models");
 
-        public async Task InitializeAsync(string dataPath)
+        public OcrEngineType CurrentEngineType
         {
-            if (_isLoaded)
-                return;
-
-            await Task.Run(async () =>
+            get => _currentEngineType;
+            set
             {
-                try
+                if (_currentEngineType != value)
                 {
-                    if (!Directory.Exists(dataPath))
-                    {
-                        Directory.CreateDirectory(dataPath);
-                    }
-
-                    string tesseractFile = Path.Combine(dataPath, "eng.traineddata");
-
-                    if (!File.Exists(tesseractFile))
-                    {
-                        using var client = new HttpClient();
-                        Console.WriteLine("Downloading Tesseract data...");
-                        using var response = await client.GetAsync(TesseractDataUrl);
-                        response.EnsureSuccessStatusCode();
-                        using var stream = await response.Content.ReadAsStreamAsync();
-                        using var fileStream = File.Create(tesseractFile);
-                        await stream.CopyToAsync(fileStream);
-                        Console.WriteLine("Downloaded Tesseract data.");
-                    }
-
-                    _engine = new TesseractEngine(dataPath, "eng", EngineMode.LstmOnly);
-                    _isLoaded = true;
+                    _currentEngineType = value;
+                    _currentEngine = null; // Force re-initialization
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to init OCR: {ex.Message}");
-                }
-            });
+            }
+        }
+
+        public async Task InitializeAsync(OcrEngineType engineType)
+        {
+            CurrentEngineType = engineType;
+            
+            switch (engineType)
+            {
+                case OcrEngineType.Tesseract:
+                    if (_tesseractEngine == null)
+                    {
+                        _tesseractEngine = new TesseractOcrEngine();
+                    }
+                    if (!_tesseractEngine.IsLoaded)
+                    {
+                        await _tesseractEngine.InitializeAsync(TesseractDataFolder);
+                    }
+                    _currentEngine = _tesseractEngine;
+                    break;
+
+                case OcrEngineType.PaddleOCR:
+                    if (_paddleEngine == null)
+                    {
+                        _paddleEngine = new PaddleOcrEngine();
+                    }
+                    if (!_paddleEngine.IsLoaded)
+                    {
+                        await _paddleEngine.InitializeAsync(PaddleDataFolder);
+                    }
+                    _currentEngine = _paddleEngine;
+                    break;
+            }
         }
 
         public async Task ProcessImagesAsync(List<ImageItem> images)
         {
-            if (!_isLoaded)
+            if (_currentEngine == null || !_currentEngine.IsLoaded)
             {
-                await InitializeAsync(ApplicationFolder);
-                if (!_isLoaded)
+                await InitializeAsync(_currentEngineType);
+                if (_currentEngine == null || !_currentEngine.IsLoaded)
                     return;
             }
 
-            await Task.Run(() =>
-            {
-                foreach (var img in images)
-                {
-                    // Skip if already has text
-                    if (!string.IsNullOrEmpty(img.OcrText))
-                        continue;
-
-                    try
-                    {
-                        using var pix = Pix.LoadFromFile(img.Path);
-                        using var page = _engine!.Process(pix);
-                        string text = page.GetText();
-
-                        if (!string.IsNullOrWhiteSpace(text))
-                        {
-                            img.OcrText = text.Trim();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"OCR failed for {img.FileName}: {ex.Message}");
-                    }
-                }
-            });
+            await _currentEngine.ProcessImagesAsync(images);
         }
 
         public void Dispose()
         {
-            _engine?.Dispose();
+            _tesseractEngine?.Dispose();
+            _paddleEngine?.Dispose();
         }
     }
-
 }

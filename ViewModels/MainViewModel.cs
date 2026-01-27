@@ -38,6 +38,9 @@ namespace SharpGallery.ViewModels
         [ObservableProperty]
         private string _searchBarStatusText = "Ready";
 
+        [ObservableProperty]
+        private OcrEngineType _selectedOcrEngine = OcrEngineType.Tesseract;
+
         public UpdateViewModel UpdateViewModel { get; }
 
         /// <summary>
@@ -111,15 +114,15 @@ namespace SharpGallery.ViewModels
         [RelayCommand]
         public async Task ScanOcrAsync()
         {
-            StatusText = "Loading OCR model...";
+            StatusText = $"Loading {SelectedOcrEngine} OCR model...";
             try
             {
-                await _ocrService.InitializeAsync(Path.Combine(AppContext.BaseDirectory, "tessdata"));
+                await _ocrService.InitializeAsync(SelectedOcrEngine);
 
-                StatusText = "Running OCR on images...";
+                StatusText = $"Running {SelectedOcrEngine} OCR on images...";
 
                 await _ocrService.ProcessImagesAsync(Images.ToList());
-                StatusText = "OCR scanning complete.";
+                StatusText = $"{SelectedOcrEngine} OCR scanning complete.";
             }
             catch (Exception ex)
             {
