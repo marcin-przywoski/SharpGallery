@@ -33,7 +33,7 @@ namespace SharpGallery.ViewModels
         private string _statusText = "Ready";
 
         [ObservableProperty]
-        private string _searchText = "Enter search query";
+        private string _searchText = "";
 
         [ObservableProperty]
         private string _searchBarStatusText = "Ready";

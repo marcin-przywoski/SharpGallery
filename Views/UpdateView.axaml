@@ -11,32 +11,38 @@
         <vm:UpdateViewModel/>
     </Design.DataContext>
 
-    <Border Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
-            CornerRadius="8"
+    <Border Background="#1a1a1a"
+            CornerRadius="10"
             Padding="16"
-            Margin="8">
+            Margin="8"
+            BorderThickness="1"
+            BorderBrush="#404040"
+            BoxShadow="0 4 16 0 #60000000">
         <StackPanel Spacing="12">
             <!-- Header -->
             <StackPanel Orientation="Horizontal" Spacing="8">
                 <PathIcon Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"
                           Width="20" Height="20"
-                          Foreground="{DynamicResource SystemAccentColor}"/>
+                          Foreground="#0078D4"/>
                 <TextBlock Text="Software Update"
                            FontWeight="SemiBold"
-                           FontSize="16"
+                           FontSize="15"
+                           Foreground="#E0E0E0"
                            VerticalAlignment="Center"/>
             </StackPanel>
 
             <!-- Status Message -->
             <TextBlock Text="{Binding StatusMessage}"
                        TextWrapping="Wrap"
-                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                       FontSize="12"
+                       Foreground="#AAAAAA"/>
 
             <!-- Download Progress -->
             <ProgressBar Value="{Binding DownloadProgress}"
                          Maximum="100"
                          IsVisible="{Binding IsDownloading}"
-                         Height="4"/>
+                         Height="6"
+                         CornerRadius="3"/>
 
             <!-- Action Buttons -->
             <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
@@ -44,30 +50,39 @@
                 <Button Content="Check for Updates"
                         Command="{Binding CheckForUpdatesCommand}"
                         IsVisible="{Binding !IsUpdateAvailable}"
-                        IsEnabled="{Binding !IsCheckingForUpdates}"/>
+                        IsEnabled="{Binding !IsCheckingForUpdates}"
+                        CornerRadius="6"
+                        Padding="12,8"/>
 
                 <!-- Download Button -->
                 <Button Content="Download Update"
                         Command="{Binding DownloadUpdateCommand}"
                         IsVisible="{Binding IsUpdateAvailable}"
                         IsEnabled="{Binding !IsDownloading}"
-                        Classes="accent"/>
+                        Classes="accent"
+                        CornerRadius="6"
+                        Padding="12,8"/>
 
                 <!-- Install Buttons -->
                 <Button Content="Install &amp; Restart"
                         Command="{Binding InstallAndRestartCommand}"
                         IsVisible="{Binding IsReadyToInstall}"
-                        Classes="accent"/>
+                        Classes="accent"
+                        CornerRadius="6"
+                        Padding="12,8"/>
 
                 <Button Content="Install on Exit"
                         Command="{Binding InstallOnExitCommand}"
-                        IsVisible="{Binding IsReadyToInstall}"/>
+                        IsVisible="{Binding IsReadyToInstall}"
+                        CornerRadius="6"
+                        Padding="12,8"/>
             </StackPanel>
 
             <!-- Loading Indicator -->
             <ProgressBar IsIndeterminate="True"
                          IsVisible="{Binding IsCheckingForUpdates}"
-                         Height="2"/>
+                         Height="3"
+                         CornerRadius="2"/>
         </StackPanel>
     </Border>
 </UserControl>
