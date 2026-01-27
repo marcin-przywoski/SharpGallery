@@ -25,29 +25,13 @@ namespace SharpGallery.Services
                 {
                     // Initialize PaddleOCR with default models
                     // PaddleOCRSharp will handle model downloading automatically
-                    OCRModelConfig config = null;
+                    OCRParameter oCRParameter = new OCRParameter();
+                    oCRParameter.enable_mkldnn = true; // Enable MKLDNN for better performance
+                    oCRParameter.cpu_math_library_num_threads = 6;
                     
-                    // Try to use local models if they exist, otherwise use default
-                    string modelPath = Path.Combine(dataPath, "paddle_models");
-                    if (Directory.Exists(modelPath))
-                    {
-                        // Use local models if available
-                        OCRParameter oCRParameter = new OCRParameter();
-                        oCRParameter.enable_mkldnn = 1; // Enable MKLDNN for better performance
-                        oCRParameter.cpu_math_library_num_threads = 6;
-                        config = new OCRModelConfig();
-                        // Set custom model paths if needed
-                    }
-                    else
-                    {
-                        // Use default built-in models
-                        OCRParameter oCRParameter = new OCRParameter();
-                        oCRParameter.enable_mkldnn = 1;
-                        oCRParameter.cpu_math_library_num_threads = 6;
-                        config = new OCRModelConfig();
-                    }
+                    OCRModelConfig config = new OCRModelConfig();
 
-                    _engine = new PaddleOCREngine(config, new OCRParameter());
+                    _engine = new PaddleOCREngine(config, oCRParameter);
                     _isLoaded = true;
                     Console.WriteLine("PaddleOCR initialized successfully.");
                 }
