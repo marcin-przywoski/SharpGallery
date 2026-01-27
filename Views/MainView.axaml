@@ -30,23 +30,42 @@
                 <!--  Sidebar  -->
                 <Border
                     Grid.Column="0"
-                    Padding="10"
-                    Background="#202020">
-                    <StackPanel Spacing="10">
+                    Padding="15"
+                    Background="#1a1a1a">
+                    <StackPanel Spacing="12">
                         <TextBlock
                             Margin="0,0,0,20"
-                            FontSize="18"
-                            FontWeight="Bold"
-                            Foreground="White"
+                            FontSize="20"
+                            FontWeight="SemiBold"
+                            Foreground="#E0E0E0"
                             Text="Sharp Gallery" />
+                        
                         <Button
                             HorizontalAlignment="Stretch"
                             Click="OpenFolder_Click"
-                            Content="Open Folder" />
+                            Classes="accent"
+                            CornerRadius="6"
+                            Padding="12,10">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon 
+                                    Data="M10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6H12L10,4Z"
+                                    Width="16" Height="16" />
+                                <TextBlock Text="Open Folder" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        
                         <Button
                             HorizontalAlignment="Stretch"
                             Command="{Binding ScanOcrCommand}"
-                            Content="Scan Text (OCR)" />
+                            CornerRadius="6"
+                            Padding="12,10">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon 
+                                    Data="M2,5H14V7H2V5M2,9H14V11H2V9M2,13H14V15H2V13M2,17H10V19H2V17M20.39,19.37L16.62,15.6C15.93,16.08 15.11,16.38 14.21,16.38C11.55,16.38 9.38,14.21 9.38,11.55C9.38,8.89 11.55,6.72 14.21,6.72C16.87,6.72 19.04,8.89 19.04,11.55C19.04,12.45 18.74,13.27 18.26,13.96L22.03,17.73L20.39,19.37M14.21,15.1C15.88,15.1 17.26,13.72 17.26,12.05C17.26,10.38 15.88,9 14.21,9C12.54,9 11.16,10.38 11.16,12.05C11.16,13.72 12.54,15.1 14.21,15.1Z"
+                                    Width="16" Height="16" />
+                                <TextBlock Text="Scan Text (OCR)" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </Border>
                 <!--  Main Content  -->
@@ -56,17 +75,36 @@
                         Grid.Row="0"
                         Margin="20"
                         ColumnDefinitions="*,Auto">
-                        <TextBox
+                        <Border
                             Grid.Column="0"
                             Margin="0,0,20,0"
-                            Padding="10,5"
-                            CornerRadius="20"
-                            Text="{Binding SearchText}"
-                            Watermark="Search images..." />
+                            Background="#1a1a1a"
+                            CornerRadius="22"
+                            Padding="12,0,12,0"
+                            BorderThickness="1"
+                            BorderBrush="#404040">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <PathIcon 
+                                    Grid.Column="0"
+                                    Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
+                                    Width="16" Height="16"
+                                    Margin="0,0,8,0"
+                                    VerticalAlignment="Center"
+                                    Foreground="#808080" />
+                                <TextBox
+                                    Grid.Column="1"
+                                    Padding="0,8"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Text="{Binding SearchText}"
+                                    Watermark="Search images..." />
+                            </Grid>
+                        </Border>
                         <TextBlock
                             Grid.Column="1"
                             VerticalAlignment="Center"
-                            Foreground="#AAAAAA"
+                            Foreground="#888888"
+                            FontSize="12"
                             Text="{Binding SearchBarStatusText}" />
                     </Grid>
                     <!--  Gallery View  -->
@@ -80,21 +118,27 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border
-                                        Width="150"
-                                        Height="150"
-                                        Margin="5"
-                                        Background="#303030"
+                                        Width="160"
+                                        Height="160"
+                                        Margin="8"
+                                        Background="#252525"
+                                        Classes="thumbnail"
                                         ClipToBounds="True"
-                                        CornerRadius="8">
+                                        CornerRadius="10"
+                                        BoxShadow="0 2 8 0 #40000000">
                                         <Grid>
                                             <Image Source="{Binding Thumbnail}" Stretch="UniformToFill" />
-                                            <TextBlock
-                                                Padding="5"
+                                            <Border
+                                                Padding="8,6"
                                                 VerticalAlignment="Bottom"
-                                                Background="#80000000"
-                                                FontSize="10"
-                                                Foreground="White"
-                                                Text="{Binding FileName}" />
+                                                Background="#90000000"
+                                                CornerRadius="0,0,10,10">
+                                                <TextBlock
+                                                    FontSize="11"
+                                                    Foreground="#E0E0E0"
+                                                    Text="{Binding FileName}"
+                                                    TextTrimming="CharacterEllipsis" />
+                                            </Border>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -106,9 +150,14 @@
             <!--  Status Bar  -->
             <Border
                 Grid.Row="2"
-                Padding="8"
-                Background="#1e1e1e">
-                <TextBlock FontSize="12" Text="{Binding StatusText}" />
+                Padding="10,6"
+                Background="#151515"
+                BorderThickness="0,1,0,0"
+                BorderBrush="#2a2a2a">
+                <TextBlock 
+                    FontSize="11" 
+                    Foreground="#999999"
+                    Text="{Binding StatusText}" />
             </Border>
             <views:UpdateView
                 Grid.Row="1"
