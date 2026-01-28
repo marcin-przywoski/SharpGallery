@@ -43,6 +43,17 @@
                             HorizontalAlignment="Stretch"
                             Click="OpenFolder_Click"
                             Content="Open Folder" />
+                        <TextBlock
+                            Margin="0,10,0,5"
+                            FontWeight="SemiBold"
+                            Foreground="White"
+                            Text="OCR Engine:" />
+                        <ComboBox
+                            HorizontalAlignment="Stretch"
+                            SelectedIndex="{Binding SelectedOcrEngine}">
+                            <ComboBoxItem Content="Tesseract" />
+                            <ComboBoxItem Content="PaddleOCR" />
+                        </ComboBox>
                         <Button
                             HorizontalAlignment="Stretch"
                             Command="{Binding ScanOcrCommand}"

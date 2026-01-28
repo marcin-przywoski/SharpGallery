@@ -7,6 +7,15 @@
 
 This application serves as a gallery for photos meant down the line to be a replacement for Windows Photos while providing better performance and features.
 
+## Features
+
+- **OCR (Optical Character Recognition)**: Extract text from images using either Tesseract or PaddleOCR engines
+  - **Tesseract OCR**: Traditional OCR engine with good accuracy for English text
+  - **PaddleOCR**: Modern deep learning-based OCR with support for multiple languages and better accuracy
+- Browse and search through your image collections
+- Fast thumbnail loading with SkiaSharp
+- Modern Fluent UI design
+
 ## Installation
 
 Download the repository and compile it by yourself in VS Code or Visual Studio or download the compiled package from the Packages section
@@ -19,3 +28,5 @@ Download the repository and compile it by yourself in VS Code or Visual Studio o
 
 - [Avalonia UI](https://github.com/AvaloniaUI/Avalonia)
 - [Velopack](https://github.com/velopack/velopack)
+- [Tesseract OCR](https://github.com/charlesw/tesseract)
+- [PaddleOCRSharp](https://github.com/raoyutian/PaddleOCRSharp)
