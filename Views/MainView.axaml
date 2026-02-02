@@ -93,7 +93,7 @@
                                     Foreground="#808080" />
                                 <TextBox
                                     Grid.Column="1"
-                                    Padding="0,8"
+                                    Padding="5,8"
                                     Background="Transparent"
                                     BorderThickness="0"
                                     Text="{Binding SearchText}"
