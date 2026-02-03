@@ -5,6 +5,19 @@
              RequestedThemeVariant="Dark">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
+    <Application.Resources>
+        <Color x:Key="ColorAccent">#FF0078D4</Color>
+
+        <SolidColorBrush x:Key="BrushAccent" Color="{StaticResource ColorAccent}" />
+        <SolidColorBrush x:Key="BrushSurface1" Color="#FF1A1A1A" />
+        <SolidColorBrush x:Key="BrushSurface2" Color="#FF252525" />
+        <SolidColorBrush x:Key="BrushBorder" Color="#FF404040" />
+        <SolidColorBrush x:Key="BrushBorderSubtle" Color="#FF2A2A2A" />
+        <SolidColorBrush x:Key="BrushTextPrimary" Color="#FFE0E0E0" />
+        <SolidColorBrush x:Key="BrushTextSecondary" Color="#FFAAAAAA" />
+        <SolidColorBrush x:Key="BrushTextTertiary" Color="#FF888888" />
+    </Application.Resources>
+
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
@@ -15,6 +28,7 @@
         <!-- Custom Styles for improved UI -->
         <Style Selector="Button">
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
             <Setter Property="Transitions">
                 <Transitions>
                     <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" />
@@ -33,7 +47,7 @@
         
         <!-- Accent Button Style -->
         <Style Selector="Button.accent">
-            <Setter Property="Background" Value="#0078D4" />
+            <Setter Property="Background" Value="{DynamicResource BrushAccent}" />
             <Setter Property="Foreground" Value="White" />
         </Style>
         
@@ -44,6 +58,52 @@
         <Style Selector="Button.accent:pressed">
             <Setter Property="Background" Value="#006CBE" />
         </Style>
+
+        <!-- Search box (Border wraps a borderless TextBox) -->
+        <Style Selector="Border.searchBox">
+            <Setter Property="Background" Value="{DynamicResource BrushSurface1}" />
+            <Setter Property="CornerRadius" Value="22" />
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                    <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Border.searchBox:focus-within">
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}" />
+            <Setter Property="BoxShadow" Value="0 0 0 3 #330078D4" />
+        </Style>
+
+        <Style Selector="TextBox.searchBoxInput">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource BrushAccent}" />
+            <Setter Property="SelectionBrush" Value="#550078D4" />
+        </Style>
+
+        <Style Selector="TextBox.searchBoxInput:pointerover">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+
+        <Style Selector="TextBox.searchBoxInput:focus">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+
+        <!-- Force template border off (prevents Fluent theme from drawing an extra border) -->
+        <Style Selector="TextBox.searchBoxInput /template/ Border">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
         
         <!-- Border hover effects for image thumbnails -->
         <Style Selector="Border.thumbnail">
@@ -51,6 +111,7 @@
                 <Transitions>
                     <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
                     <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.2" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
                 </Transitions>
             </Setter>
         </Style>
@@ -68,10 +129,6 @@
                     <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
                 </Transitions>
             </Setter>
-        </Style>
-        
-        <Style Selector="TextBox:focus">
-            <Setter Property="BorderBrush" Value="#0078D4" />
         </Style>
     </Application.Styles>
 </Application>

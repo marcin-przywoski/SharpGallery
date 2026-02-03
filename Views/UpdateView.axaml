@@ -11,23 +11,23 @@
         <vm:UpdateViewModel/>
     </Design.DataContext>
 
-    <Border Background="#1a1a1a"
+        <Border Background="{DynamicResource BrushSurface1}"
             CornerRadius="10"
             Padding="16"
             Margin="8"
             BorderThickness="1"
-            BorderBrush="#404040"
+            BorderBrush="{DynamicResource BrushBorder}"
             BoxShadow="0 4 16 0 #60000000">
         <StackPanel Spacing="12">
             <!-- Header -->
             <StackPanel Orientation="Horizontal" Spacing="8">
                 <PathIcon Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"
                           Width="20" Height="20"
-                          Foreground="#0078D4"/>
+                          Foreground="{DynamicResource BrushAccent}"/>
                 <TextBlock Text="Software Update"
                            FontWeight="SemiBold"
                            FontSize="15"
-                           Foreground="#E0E0E0"
+                           Foreground="{DynamicResource BrushTextPrimary}"
                            VerticalAlignment="Center"/>
             </StackPanel>
 
@@ -35,7 +35,7 @@
             <TextBlock Text="{Binding StatusMessage}"
                        TextWrapping="Wrap"
                        FontSize="12"
-                       Foreground="#AAAAAA"/>
+                       Foreground="{DynamicResource BrushTextSecondary}"/>
 
             <!-- Download Progress -->
             <ProgressBar Value="{Binding DownloadProgress}"

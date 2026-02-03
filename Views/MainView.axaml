@@ -31,7 +31,8 @@
                 <Border
                     Grid.Column="0"
                     Padding="15"
-                    Background="#1a1a1a">
+                    Background="{DynamicResource BrushSurface1}"
+                    BorderBrush="{DynamicResource BrushBorderSubtle}">
                     <StackPanel Spacing="12">
                         <TextBlock
                             Margin="0,0,0,20"
@@ -78,11 +79,7 @@
                         <Border
                             Grid.Column="0"
                             Margin="0,0,20,0"
-                            Background="#1a1a1a"
-                            CornerRadius="22"
-                            Padding="12,0,12,0"
-                            BorderThickness="1"
-                            BorderBrush="#404040">
+                            Classes="searchBox">
                             <Grid ColumnDefinitions="Auto,*">
                                 <PathIcon 
                                     Grid.Column="0"
@@ -93,9 +90,8 @@
                                     Foreground="#808080" />
                                 <TextBox
                                     Grid.Column="1"
-                                    Padding="5,8"
-                                    Background="Transparent"
-                                    BorderThickness="0"
+                                    Classes="searchBoxInput"
+                                    Padding="0,8"
                                     Text="{Binding SearchText}"
                                     Watermark="Search images..." />
                             </Grid>
@@ -103,12 +99,12 @@
                         <TextBlock
                             Grid.Column="1"
                             VerticalAlignment="Center"
-                            Foreground="#888888"
+                            Foreground="#808080"
                             FontSize="12"
                             Text="{Binding SearchBarStatusText}" />
                     </Grid>
                     <!--  Gallery View  -->
-                    <ScrollViewer Grid.Row="1" Padding="20">
+                    <ScrollViewer Grid.Row="1" Padding="20" HorizontalScrollBarVisibility="Disabled">
                         <ItemsControl ItemsSource="{Binding FilteredImages}" RenderOptions.BitmapInterpolationMode="HighQuality">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -156,7 +152,7 @@
                 BorderBrush="#2a2a2a">
                 <TextBlock 
                     FontSize="11" 
-                    Foreground="#999999"
+                    Foreground="{DynamicResource BrushTextSecondary}"
                     Text="{Binding StatusText}" />
             </Border>
             <views:UpdateView
