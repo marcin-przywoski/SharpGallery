@@ -51,7 +51,7 @@ namespace SharpGallery.Services
             if (_updateInfo == null)
                 return;
 
-            _updateManager.ApplyUpdatesAndRestart();
+            _updateManager.ApplyUpdatesAndRestart(_updateInfo.TargetFullRelease);
         }
 
         public void ApplyUpdateOnExit()
@@ -59,7 +59,7 @@ namespace SharpGallery.Services
             if (_updateInfo == null)
                 return;
 
-            _updateManager.ApplyUpdatesAndExit();
+            _updateManager.ApplyUpdatesAndExit(_updateInfo.TargetFullRelease);
         }
     }
 }
