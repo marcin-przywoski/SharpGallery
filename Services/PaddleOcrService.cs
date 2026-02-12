@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenCvSharp;
 using SharpGallery.Models;
@@ -16,45 +17,51 @@ namespace SharpGallery.Services
     {
         private PaddleOcrAll? _ocrEngine;
         private bool _isLoaded;
+        private readonly SemaphoreSlim _initLock = new SemaphoreSlim(1, 1);
         private readonly object _lock = new object();
 
         public async Task InitializeAsync()
         {
-            lock (_lock)
+            await _initLock.WaitAsync();
+            try
             {
                 if (_isLoaded)
                     return;
-            }
 
-            await Task.Run(() =>
-            {
-                try
+                await Task.Run(() =>
                 {
-                    Console.WriteLine("Initializing PaddleOCR...");
-                    
-                    // Use the LocalV3 English model
-                    FullOcrModel model = LocalFullModels.EnglishV3;
-                    
-                    // Initialize with CPU mode (Mkldnn for better performance)
-                    var engine = new PaddleOcrAll(model, PaddleDevice.Mkldnn())
+                    try
                     {
-                        AllowRotateDetection = true, // Enable text rotation detection
-                        Enable180Classification = false // Disable 180-degree classification for better performance
-                    };
-                    
-                    lock (_lock)
-                    {
-                        _ocrEngine = engine;
-                        _isLoaded = true;
+                        Console.WriteLine("Initializing PaddleOCR...");
+                        
+                        // Use the LocalV3 English model
+                        FullOcrModel model = LocalFullModels.EnglishV3;
+                        
+                        // Initialize with CPU mode (Mkldnn for better performance)
+                        var engine = new PaddleOcrAll(model, PaddleDevice.Mkldnn())
+                        {
+                            AllowRotateDetection = true, // Enable text rotation detection
+                            Enable180Classification = false // Disable 180-degree classification for better performance
+                        };
+                        
+                        lock (_lock)
+                        {
+                            _ocrEngine = engine;
+                            _isLoaded = true;
+                        }
+                        
+                        Console.WriteLine("PaddleOCR initialized successfully.");
                     }
-                    
-                    Console.WriteLine("PaddleOCR initialized successfully.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to initialize PaddleOCR: {ex.Message}");
-                }
-            });
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to initialize PaddleOCR: {ex.Message}");
+                    }
+                });
+            }
+            finally
+            {
+                _initLock.Release();
+            }
         }
 
         public async Task ProcessImagesAsync(List<ImageItem> images)
@@ -135,6 +142,7 @@ namespace SharpGallery.Services
                 _ocrEngine = null;
                 _isLoaded = false;
             }
+            _initLock?.Dispose();
         }
     }
 }

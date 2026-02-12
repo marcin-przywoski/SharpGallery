@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using SharpGallery.Models;
 using Tesseract;
@@ -19,6 +20,7 @@ namespace SharpGallery.Services
         private TesseractEngine? _engine;
         private PaddleOcrService? _paddleOcrService;
         private bool _isLoaded;
+        private readonly SemaphoreSlim _initLock = new SemaphoreSlim(1, 1);
         private readonly object _lock = new object();
         private const string TesseractDataUrl = "https://github.com/tesseract-ocr/tessdata_best/raw/main/eng.traineddata";
 
@@ -28,62 +30,67 @@ namespace SharpGallery.Services
 
         public async Task InitializeAsync(string dataPath)
         {
-            lock (_lock)
+            await _initLock.WaitAsync();
+            try
             {
                 if (_isLoaded)
                     return;
+
+                await Task.Run(async () =>
+                {
+                    try
+                    {
+                        if (SelectedEngine == OcrEngine.Tesseract)
+                        {
+                            if (!Directory.Exists(dataPath))
+                            {
+                                Directory.CreateDirectory(dataPath);
+                            }
+
+                            string tesseractFile = Path.Combine(dataPath, "eng.traineddata");
+
+                            if (!File.Exists(tesseractFile))
+                            {
+                                using var client = new HttpClient();
+                                Console.WriteLine("Downloading Tesseract data...");
+                                using var response = await client.GetAsync(TesseractDataUrl);
+                                response.EnsureSuccessStatusCode();
+                                using var stream = await response.Content.ReadAsStreamAsync();
+                                using var fileStream = File.Create(tesseractFile);
+                                await stream.CopyToAsync(fileStream);
+                                Console.WriteLine("Downloaded Tesseract data.");
+                            }
+
+                            var engine = new TesseractEngine(dataPath, "eng", EngineMode.LstmOnly);
+                            
+                            lock (_lock)
+                            {
+                                _engine = engine;
+                                _isLoaded = true;
+                            }
+                        }
+                        else if (SelectedEngine == OcrEngine.PaddleOCR)
+                        {
+                            var paddleService = new PaddleOcrService();
+                            await paddleService.InitializeAsync();
+                            
+                            lock (_lock)
+                            {
+                                _paddleOcrService = paddleService;
+                                _isLoaded = true;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to init OCR: {ex.Message}");
+                    }
+                });
             }
-
-            await Task.Run(async () =>
+            finally
             {
-                try
-                {
-                    if (SelectedEngine == OcrEngine.Tesseract)
-                    {
-                        if (!Directory.Exists(dataPath))
-                        {
-                            Directory.CreateDirectory(dataPath);
-                        }
-
-                        string tesseractFile = Path.Combine(dataPath, "eng.traineddata");
-
-                        if (!File.Exists(tesseractFile))
-                        {
-                            using var client = new HttpClient();
-                            Console.WriteLine("Downloading Tesseract data...");
-                            using var response = await client.GetAsync(TesseractDataUrl);
-                            response.EnsureSuccessStatusCode();
-                            using var stream = await response.Content.ReadAsStreamAsync();
-                            using var fileStream = File.Create(tesseractFile);
-                            await stream.CopyToAsync(fileStream);
-                            Console.WriteLine("Downloaded Tesseract data.");
-                        }
-
-                        var engine = new TesseractEngine(dataPath, "eng", EngineMode.LstmOnly);
-                        
-                        lock (_lock)
-                        {
-                            _engine = engine;
-                            _isLoaded = true;
-                        }
-                    }
-                    else if (SelectedEngine == OcrEngine.PaddleOCR)
-                    {
-                        var paddleService = new PaddleOcrService();
-                        await paddleService.InitializeAsync();
-                        
-                        lock (_lock)
-                        {
-                            _paddleOcrService = paddleService;
-                            _isLoaded = true;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to init OCR: {ex.Message}");
-                }
-            });
+                _initLock.Release();
+            }
         }
 
         public async Task ProcessImagesAsync(List<ImageItem> images)
@@ -158,6 +165,7 @@ namespace SharpGallery.Services
                 _paddleOcrService = null;
                 _isLoaded = false;
             }
+            _initLock?.Dispose();
         }
     }
 
