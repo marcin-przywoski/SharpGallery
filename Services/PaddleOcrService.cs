@@ -16,11 +16,15 @@ namespace SharpGallery.Services
     {
         private PaddleOcrAll? _ocrEngine;
         private bool _isLoaded;
+        private readonly object _lock = new object();
 
         public async Task InitializeAsync()
         {
-            if (_isLoaded)
-                return;
+            lock (_lock)
+            {
+                if (_isLoaded)
+                    return;
+            }
 
             await Task.Run(() =>
             {
@@ -32,13 +36,18 @@ namespace SharpGallery.Services
                     FullOcrModel model = LocalFullModels.EnglishV3;
                     
                     // Initialize with CPU mode (Mkldnn for better performance)
-                    _ocrEngine = new PaddleOcrAll(model, PaddleDevice.Mkldnn())
+                    var engine = new PaddleOcrAll(model, PaddleDevice.Mkldnn())
                     {
                         AllowRotateDetection = true, // Enable text rotation detection
                         Enable180Classification = false // Disable 180-degree classification for better performance
                     };
                     
-                    _isLoaded = true;
+                    lock (_lock)
+                    {
+                        _ocrEngine = engine;
+                        _isLoaded = true;
+                    }
+                    
                     Console.WriteLine("PaddleOCR initialized successfully.");
                 }
                 catch (Exception ex)
@@ -50,10 +59,20 @@ namespace SharpGallery.Services
 
         public async Task ProcessImagesAsync(List<ImageItem> images)
         {
-            if (!_isLoaded)
+            bool isLoaded;
+            lock (_lock)
+            {
+                isLoaded = _isLoaded;
+            }
+
+            if (!isLoaded)
             {
                 await InitializeAsync();
-                if (!_isLoaded)
+                lock (_lock)
+                {
+                    isLoaded = _isLoaded;
+                }
+                if (!isLoaded)
                     return;
             }
 
@@ -67,6 +86,15 @@ namespace SharpGallery.Services
 
                     try
                     {
+                        PaddleOcrAll? engine;
+                        lock (_lock)
+                        {
+                            engine = _ocrEngine;
+                        }
+
+                        if (engine == null)
+                            continue;
+
                         // Load image using OpenCV
                         byte[] imageData = File.ReadAllBytes(img.Path);
                         using (Mat mat = Cv2.ImDecode(imageData, ImreadModes.Color))
@@ -77,7 +105,7 @@ namespace SharpGallery.Services
                                 continue;
                             }
 
-                            var result = _ocrEngine!.Run(mat);
+                            var result = engine.Run(mat);
                             
                             if (result != null && result.Regions.Any())
                             {
@@ -101,7 +129,12 @@ namespace SharpGallery.Services
 
         public void Dispose()
         {
-            _ocrEngine?.Dispose();
+            lock (_lock)
+            {
+                _ocrEngine?.Dispose();
+                _ocrEngine = null;
+                _isLoaded = false;
+            }
         }
     }
 }

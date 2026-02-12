@@ -19,6 +19,7 @@ namespace SharpGallery.Services
         private TesseractEngine? _engine;
         private PaddleOcrService? _paddleOcrService;
         private bool _isLoaded;
+        private readonly object _lock = new object();
         private const string TesseractDataUrl = "https://github.com/tesseract-ocr/tessdata_best/raw/main/eng.traineddata";
 
         private readonly string ApplicationFolder = Path.Combine(AppContext.BaseDirectory, "tessdata");
@@ -27,8 +28,11 @@ namespace SharpGallery.Services
 
         public async Task InitializeAsync(string dataPath)
         {
-            if (_isLoaded)
-                return;
+            lock (_lock)
+            {
+                if (_isLoaded)
+                    return;
+            }
 
             await Task.Run(async () =>
             {
@@ -55,14 +59,24 @@ namespace SharpGallery.Services
                             Console.WriteLine("Downloaded Tesseract data.");
                         }
 
-                        _engine = new TesseractEngine(dataPath, "eng", EngineMode.LstmOnly);
-                        _isLoaded = true;
+                        var engine = new TesseractEngine(dataPath, "eng", EngineMode.LstmOnly);
+                        
+                        lock (_lock)
+                        {
+                            _engine = engine;
+                            _isLoaded = true;
+                        }
                     }
                     else if (SelectedEngine == OcrEngine.PaddleOCR)
                     {
-                        _paddleOcrService = new PaddleOcrService();
-                        await _paddleOcrService.InitializeAsync();
-                        _isLoaded = true;
+                        var paddleService = new PaddleOcrService();
+                        await paddleService.InitializeAsync();
+                        
+                        lock (_lock)
+                        {
+                            _paddleOcrService = paddleService;
+                            _isLoaded = true;
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -74,18 +88,37 @@ namespace SharpGallery.Services
 
         public async Task ProcessImagesAsync(List<ImageItem> images)
         {
-            if (!_isLoaded)
+            bool isLoaded;
+            lock (_lock)
+            {
+                isLoaded = _isLoaded;
+            }
+
+            if (!isLoaded)
             {
                 await InitializeAsync(ApplicationFolder);
-                if (!_isLoaded)
+                lock (_lock)
+                {
+                    isLoaded = _isLoaded;
+                }
+                if (!isLoaded)
                     return;
             }
 
-            if (SelectedEngine == OcrEngine.PaddleOCR && _paddleOcrService != null)
+            PaddleOcrService? paddleService = null;
+            TesseractEngine? tesseractEngine = null;
+            
+            lock (_lock)
             {
-                await _paddleOcrService.ProcessImagesAsync(images);
+                paddleService = _paddleOcrService;
+                tesseractEngine = _engine;
             }
-            else if (SelectedEngine == OcrEngine.Tesseract && _engine != null)
+
+            if (SelectedEngine == OcrEngine.PaddleOCR && paddleService != null)
+            {
+                await paddleService.ProcessImagesAsync(images);
+            }
+            else if (SelectedEngine == OcrEngine.Tesseract && tesseractEngine != null)
             {
                 await Task.Run(() =>
                 {
@@ -98,7 +131,7 @@ namespace SharpGallery.Services
                         try
                         {
                             using var pix = Pix.LoadFromFile(img.Path);
-                            using var page = _engine!.Process(pix);
+                            using var page = tesseractEngine.Process(pix);
                             string text = page.GetText();
 
                             if (!string.IsNullOrWhiteSpace(text))
@@ -117,8 +150,14 @@ namespace SharpGallery.Services
 
         public void Dispose()
         {
-            _engine?.Dispose();
-            _paddleOcrService?.Dispose();
+            lock (_lock)
+            {
+                _engine?.Dispose();
+                _engine = null;
+                _paddleOcrService?.Dispose();
+                _paddleOcrService = null;
+                _isLoaded = false;
+            }
         }
     }
 
