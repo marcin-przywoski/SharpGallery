@@ -44,6 +44,13 @@ namespace SharpGallery.ViewModels
         private DateTime? _releaseDate = DateTime.Now;
 
         /// <summary>
+        /// Whether the update panel should be visible.
+        /// True when an update is available (or downloading/ready to install) and user hasn't dismissed it.
+        /// </summary>
+        [ObservableProperty]
+        private bool _isUpdatePanelVisible = false;
+
+        /// <summary>
         /// Design-time constructor for XAML previewer.
         /// </summary>
         public UpdateViewModel()
@@ -74,16 +81,24 @@ namespace SharpGallery.ViewModels
                 if (hasUpdate)
                 {
                     IsUpdateAvailable = true;
-                    StatusMessage = "Update available!";
+                    NewVersion = _updateService.LatestVersion;
+                    ReleaseNotes = _updateService.ReleaseNotes;
+                    ReleaseName = _updateService.ReleaseName;
+                    ReleaseDate = _updateService.ReleaseDate;
+                    CurrentVersion = BuildInfo.Version;
+                    StatusMessage = $"Version {NewVersion} is available!";
+                    IsUpdatePanelVisible = true;
                 }
                 else
                 {
                     StatusMessage = "You're up to date!";
+                    IsUpdatePanelVisible = false;
                 }
             }
             catch (Exception ex)
             {
                 StatusMessage = $"Error checking for updates: {ex.Message}";
+                IsUpdatePanelVisible = false;
             }
             finally
             {
@@ -140,7 +155,14 @@ namespace SharpGallery.ViewModels
                 return;
 
             StatusMessage = "Update will be installed when you close the app.";
+            IsUpdatePanelVisible = false;
             _updateService.ApplyUpdateOnExit();
+        }
+
+        [RelayCommand]
+        private void DismissUpdate()
+        {
+            IsUpdatePanelVisible = false;
         }
 
         public async Task CheckForUpdatesOnStartupAsync()

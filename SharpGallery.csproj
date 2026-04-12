@@ -8,7 +8,7 @@
     <RepositoryUrl>https://github.com/marcin-przywoski/SharpGallery</RepositoryUrl>
 		<RepositoryType>public</RepositoryType>
     <Description>AI-powered image gallery application</Description>
-    <Version>0.0.5</Version>
+    <Version>0.0.3</Version>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
     <LangVersion>latest</LangVersion>
@@ -30,6 +30,7 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="Markdown.Avalonia" Version="11.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
 
     <!-- Roslynator analyzers -->

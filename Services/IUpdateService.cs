@@ -9,5 +9,10 @@ namespace SharpGallery.Services
         Task DownloadUpdateAsync(Action<int>? progressCallback = null);
         void ApplyUpdateAndRestart();
         void ApplyUpdateOnExit();
+
+        string? LatestVersion { get; }
+        string? ReleaseNotes { get; }
+        string? ReleaseName { get; }
+        DateTime? ReleaseDate { get; }
     }
 }

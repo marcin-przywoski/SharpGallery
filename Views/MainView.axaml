@@ -19,7 +19,7 @@
         <vm:MainViewModel />
     </Design.DataContext>
     <Panel>
-        <Border Background="#A0000000" IsHitTestVisible="False" />
+        <Border Background="#A0000000" IsHitTestVisible="False"/>
         <Grid RowDefinitions="30,*,30">
             <!--  Title Bar Drag Area  -->
             <Panel
@@ -39,7 +39,7 @@
                             FontSize="20"
                             FontWeight="SemiBold"
                             Foreground="#E0E0E0"
-                            Text="Sharp Gallery" />
+                            Text="Sharp Gallery"/>
 
                         <Button
                             Padding="12,10"

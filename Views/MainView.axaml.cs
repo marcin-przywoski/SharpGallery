@@ -10,6 +10,15 @@ namespace SharpGallery.Views
         public MainView()
         {
             InitializeComponent();
+            Loaded += MainView_Loaded;
+        }
+
+        private async void MainView_Loaded(object? sender, RoutedEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                await vm.UpdateViewModel.CheckForUpdatesOnStartupAsync();
+            }
         }
 
         private async void OpenFolder_Click(object? sender, RoutedEventArgs e)
